@@ -12,6 +12,7 @@ import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard from './StatCard';
 import SipCalculator from '../../Home/SipCalculator';
+import NewsLetter from '../../Home/NewsLetter';
 import MFGridTemp from './MFGridTemp';
 
 const data = [
@@ -85,10 +86,14 @@ export default function MainGrid() {
         <Grid size={{ xs: 12, lg: 5 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
             <SipCalculator/>
+            
             {/* <CustomizedTreeView /> */}
             {/* <ChartUserByCountry /> */}
           </Stack>
         </Grid>
+        {/* <Grid size={{ xs: 12 }}> */}
+         <NewsLetter />
+        {/* </Grid> */}
       </Grid>
       <Copyright sx={{ my: 4 }} />
     </Box>

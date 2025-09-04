@@ -55,7 +55,6 @@ export default function MFGridTemp() {
           <MutualFundDashboardPurchased />
         </Grid>
       </Grid>
-      <Copyright sx={{ my: 4 }} />
     </Box>
   );
 }
