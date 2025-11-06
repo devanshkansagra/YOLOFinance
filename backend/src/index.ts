@@ -9,7 +9,7 @@ import { fetchFinanceNews } from "./controllers/newsController";
 import fs from "fs";
 import path from "path";
 import nodemailer from "nodemailer";
-import { sendEmail } from "./helpers/sendEmail";
+import { sendEmail } from "./handlers/sendEmail";
 import { handleFeedback } from "./controllers/feedbackController";
 import feedbackRoutes from "./routes/feedback";
 

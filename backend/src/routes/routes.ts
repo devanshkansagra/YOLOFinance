@@ -5,6 +5,7 @@ import { generateOTP, verifyOTP } from "../controllers/authController";
 import investmentRoutes from "./investmentsRoutes";
 import { chatController } from "../controllers/chatController";
 import InsuranceRoutes from "./insuranceRoutes";
+
 const routes = express.Router();
 
 routes.use("/users", userRoutes);

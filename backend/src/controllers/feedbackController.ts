@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { sendEmail } from "../helpers/sendEmail";
+import { sendEmail } from "../handlers/sendEmail";
 
 export const handleFeedback = async (req: Request, res: Response) => {
     const { name, email, message } = req.body;

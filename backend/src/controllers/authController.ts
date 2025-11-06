@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createTransport } from "nodemailer";
 import { User } from "../model/user";
 import bcrypt from "bcrypt";
-import { sendEmail } from "../helpers/sendEmail";
+import { sendEmail } from "../handlers/sendEmail";
 export async function generateOTP(req: Request, res: Response) {
   const { email } = req.body;
   try {

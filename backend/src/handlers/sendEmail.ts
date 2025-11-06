@@ -7,5 +7,7 @@ export async function sendEmail(mailOptions: object) {
             pass: process.env.GMAIL_APP_PASSWORD,
         },
     });
-    await transporter.sendMail(mailOptions);
+    const response = await transporter.sendMail(mailOptions);
+    return response;
 }
+

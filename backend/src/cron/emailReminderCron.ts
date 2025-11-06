@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import UserInvestments from "../model/userInvestment";
 import { User } from "../model/user";
-import { sendEmail } from "../helpers/sendEmail";
+import { sendEmail } from "../handlers/sendEmail";
 
 // Runs every minute (for testing)
 cron.schedule("* * * * *", async () => {

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { User } from "../model/user";
 import { ACCESSS_TOKEN_URI, REDIRECT_URI } from "../constants/constants";
-import { getAuthorizationURL } from "../helpers/getAuthorizationURL";
-import { generateAuthTokens } from "../helpers/generateAuthTokens";
+import { getAuthorizationURL } from "../handlers/getAuthorizationURL";
+import { generateAuthTokens } from "../handlers/generateAuthTokens";
 
 import { AuthRequest } from "../definitions/AuthRequest";
 

@@ -40,15 +40,13 @@ export function InsurancePaymentPage() {
       body: JSON.stringify(data),
     });
 
-    const session = await res.json();
-
+    const { id, url } = await res.json();
+    const result = await stripe.redirectToCheckout({
+      sessionId: id,
+    });
     if (res.status === 201) {
       navigate("/Dashboard");
     }
-
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
   }
 
   return (
@@ -127,10 +125,6 @@ export function PaymentPage() {
     });
 
     const session = await res.json();
-
-    if (res.status === 201) {
-      navigate("/Dashboard");
-    }
 
     const result = await stripe.redirectToCheckout({
       sessionId: session.id,
