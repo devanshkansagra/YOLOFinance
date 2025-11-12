@@ -11,7 +11,6 @@ import Header from "./components/Header.jsx";
 import SideMenu from "./components/SideMenu.jsx";
 import AppTheme from "../shared-theme/AppTheme";
 import SIPReport from "./SIPReport.jsx";
-import SWPReport from "./SWPReport.jsx";
 import InsuranceReport from "./InsuranceReport.jsx";
 
 import {
@@ -60,12 +59,6 @@ export default function ReportsDashboard(props) {
                         <SIPReport />
                     </ReportWrapper>
                 );
-            case "swp":
-                return (
-                    <ReportWrapper>
-                        <SWPReport />
-                    </ReportWrapper>
-                );
             case "insurance":
                 return (
                     <ReportWrapper>
@@ -96,11 +89,6 @@ export default function ReportsDashboard(props) {
                                     key: "sip",
                                     label: "📈 SIP Report",
                                     color: "primary",
-                                },
-                                {
-                                    key: "swp",
-                                    label: "💸 SWP Report",
-                                    color: "info",
                                 },
                                 {
                                     key: "insurance",
