@@ -31,14 +31,14 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
       secure: true, // set true in prod with HTTPS
       path: "/",
       maxAge: 60 * 60 * 1000,
-      sameSite: "none"
+      sameSite: "lax"
     });
     res.cookie("access_token", accessToken, {
       httpOnly: false,
       secure: true,
       path: "/",
       maxAge: 60 * 60 * 1000,
-      sameSite: "none"
+      sameSite: "lax"
     });
 
     res.status(200).json({
@@ -68,14 +68,14 @@ export async function signup(req: Request, res: Response) {
             maxAge: 3599 * 1000,
             secure: true,
             path: "/",
-            sameSite: "none"
+            sameSite: "lax"
           })
           .cookie("access_token", accessToken, {
             httpOnly: false,
             maxAge: 3599 * 1000,
             secure: true,
             path: "/",
-            sameSite: "none"
+            sameSite: "lax"
           });
         res.status(201).send({ message: "New User Created" });
       }
@@ -115,14 +115,14 @@ export async function googleOAuthCallback(req: Request, res: Response) {
           maxAge: 3599 * 1000,
           secure: true,
           path: "/",
-          sameSite: "none"
+          sameSite: "lax"
         })
         .cookie("access_token", accessToken, {
           httpOnly: false,
           maxAge: 3599 * 1000,
           secure: true,
           path: "/",
-          sameSite: "none"
+          sameSite: "lax"
         });
       return res.redirect(`${process.env.ORIGIN}/Dashboard`);
     } else {
@@ -143,14 +143,14 @@ export async function googleOAuthCallback(req: Request, res: Response) {
             maxAge: 3599 * 1000,
             secure: true,
             path: "/",
-            sameSite: "none"
+            sameSite: "lax"
           })
           .cookie("access_token", accessToken, {
             httpOnly: false,
             maxAge: 3599 * 1000,
             secure: true,
             path: "/",
-            sameSite: "none"
+            sameSite: "lax"
           });
         return res.redirect(`${process.env.ORIGIN}/Dashboard`);
       }
@@ -201,13 +201,13 @@ export async function userLogout(req: Request, res: Response) {
         httpOnly: false, // must match your original cookie
         secure: true, // match same as when you set it
         path: "/", // match same path
-        sameSite: "none"
+        sameSite: "lax"
       })
       .clearCookie("access_token", {
         httpOnly: false, // must match your original cookie
         secure: true, // match same as when you set it
         path: "/", // match same path
-        sameSite: "none"
+        sameSite: "lax"
       });
     res.status(200).json({ message: "User Logout" });
   } catch (error) {
