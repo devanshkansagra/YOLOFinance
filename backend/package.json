@@ -43,6 +43,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.17",
-    "@types/stripe": "^8.0.416"
+    "@types/stripe": "^8.0.416",
+    "@types/twilio": "^3.19.2"
   }
 }
