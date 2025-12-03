@@ -19,7 +19,7 @@ function InvitePage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:4000/api/invite/recieve/${token}`,
+        `${import.meta.env.VITE_SERVER_ORIGIN}/api/invite/recieve/${token}`,
         {
           method: "POST",
           headers: {

@@ -19,7 +19,7 @@ export default function MFGrid() {
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:4000/fetch-mf-data")
+    fetch(import.meta.env.VITE_SERVER_ORIGIN+"/fetch-mf-data")
       .then(res => res.json())
       .then(data => {
         setData(Array.isArray(data) ? data : []);
@@ -40,7 +40,7 @@ export default function MFGrid() {
               <CircularProgress size="6rem" />
             </Box>
           ) : data.length > 0 ? (
-            <MutualFundDashboard apiUrl={"http://localhost:4000/fetch-mf-data"} data={data} />
+            <MutualFundDashboard apiUrl={import.meta.env.VITE_SERVER_ORIGIN+"/fetch-mf-data"} data={data} />
           ) : (
             <Typography align="center" sx={{ width: '100%', py: 4 }}>
               No data available.

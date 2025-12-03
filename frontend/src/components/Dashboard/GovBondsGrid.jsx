@@ -11,7 +11,7 @@ export default function GovBondsGrid() {
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:4000/fetchGovBonds")
+    fetch(import.meta.env.VITE_SERVER_ORIGIN+"/fetchGovBonds")
       .then(res => res.json())
       .then(data => {
         setData(Array.isArray(data) ? data : []);
@@ -32,7 +32,7 @@ export default function GovBondsGrid() {
               <CircularProgress size="6rem" />
             </Box>
           ) : data.length > 0 ? (
-            <GovBondsDashboard apiUrl={"http://localhost:4000/fetchGovBonds"} data={data} />
+            <GovBondsDashboard apiUrl={import.meta.env.VITE_SERVER_ORIGIN+"/fetchGovBonds"} data={data} />
           ) : (
             <Typography align="center" sx={{ width: '100%', py: 4 }}>
               No data available.

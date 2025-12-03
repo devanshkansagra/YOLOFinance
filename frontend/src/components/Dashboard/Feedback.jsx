@@ -49,7 +49,7 @@ export default function Feedback() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:4000/feedback", {
+      const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

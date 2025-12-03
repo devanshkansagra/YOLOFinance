@@ -20,7 +20,7 @@ export default function InsuranceGrid() {
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
-    fetch("http://localhost:4000/fetchInsurance")
+    fetch(import.meta.env.VITE_SERVER_ORIGIN+"/fetchInsurance")
       .then(res => res.json())
       .then(data => {
         setData(Array.isArray(data) ? data : []);
@@ -41,7 +41,7 @@ export default function InsuranceGrid() {
               <CircularProgress size="6rem" />
             </Box>
           ) : data.length > 0 ? (
-            <InsuranceDashboard apiUrl={"http://localhost:4000/fetchInsurance"} data={data} />
+            <InsuranceDashboard apiUrl={import.meta.env.VITE_SERVER_ORIGIN+"/fetchInsurance"} data={data} />
           ) : (
             <Typography align="center" sx={{ width: '100%', py: 4 }}>
               No data available.

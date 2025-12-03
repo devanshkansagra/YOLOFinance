@@ -44,7 +44,7 @@ export default function GroupsDashboard({ userId }) {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:4000/api/investments/get/${userId}`,
+          `${import.meta.env.VITE_SERVER_ORIGIN}/api/investments/get/${userId}`,
           { withCredentials: true }
         );
 

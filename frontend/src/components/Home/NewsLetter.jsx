@@ -8,7 +8,7 @@ export default function NewsLetter() {
   const [newsItems, setNewsItems] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/news") // 👈 Your backend API
+    fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/news") // 👈 Your backend API
       .then((res) => res.json())
       .then((data) => setNewsItems(data))
       .catch((err) => console.error("Error fetching news:", err));

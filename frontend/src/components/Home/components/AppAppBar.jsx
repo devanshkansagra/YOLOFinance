@@ -43,7 +43,7 @@ export default function AppAppBar() {
   const navigate = useNavigate();
   
   async function handleLogout () {
-    const response = await axios.get('http://localhost:4000/api/users/logout', {withCredentials: true});
+    const response = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+'/api/users/logout', {withCredentials: true});
     if(response) {
       navigate('/');    
     }

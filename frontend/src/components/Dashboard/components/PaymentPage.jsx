@@ -31,7 +31,7 @@ export function InsurancePaymentPage() {
       coverage,
       claimRatio,
     };
-    const res = await fetch("http://localhost:4000/api/insurance/buy-policy", {
+    const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/insurance/buy-policy", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +115,7 @@ export function PaymentPage() {
       nav: nav,
       units: units,
     };
-    const res = await fetch("http://localhost:4000/api/investments/mf-buy", {
+    const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-buy", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

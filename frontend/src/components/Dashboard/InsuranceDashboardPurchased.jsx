@@ -69,7 +69,7 @@ export default function InsuranceDashboardPurchased() {
       try {
         setLoading(true);
         const res = await axios.get(
-          "http://localhost:4000/api/insurance/fetchInsurance",
+          import.meta.env.VITE_SERVER_ORIGIN+"/api/insurance/fetchInsurance",
           { withCredentials: true }
         );
         const arr = Array.isArray(res.data.insurances) ? res.data.insurances : [];
@@ -112,7 +112,7 @@ export default function InsuranceDashboardPurchased() {
       try {
         setLoading(true);
         const res = await axios.post(
-          "http://localhost:4000/api/insurance/cancel",
+          import.meta.env.VITE_SERVER_ORIGIN+"/api/insurance/cancel",
           { policyId: selectedRow.policyId },
           { withCredentials: true }
         );

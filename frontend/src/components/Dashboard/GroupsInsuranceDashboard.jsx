@@ -48,7 +48,7 @@ export default function GroupsInsuranceDashboard({userId}) {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:4000/api/insurance/get/${userId}`,
+          `${import.meta.env.VITE_SERVER_ORIGIN}/api/insurance/get/${userId}`,
           { withCredentials: true }
         );
         const arr = Array.isArray(res.data.data)

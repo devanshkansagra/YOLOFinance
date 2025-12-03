@@ -8,7 +8,7 @@ function SuccessPage() {
   useEffect(() => {
     async function saveDetails() {
         try {
-            const response = await fetch('http://localhost:4000/api/investments/confirm', {
+            const response = await fetch(import.meta.env.VITE_SERVER_ORIGIN+'/api/investments/confirm', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

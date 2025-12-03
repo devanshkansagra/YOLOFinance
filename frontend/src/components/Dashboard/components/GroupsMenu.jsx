@@ -31,7 +31,7 @@ function GroupsMenu({ userId, setUserId }) {
   useEffect(() => {
     async function fetchUsers() {
       const res = await fetch(
-        "http://localhost:4000/api/users/connections/get",
+        import.meta.env.VITE_SERVER_ORIGIN+"/api/users/connections/get",
         {
           method: "GET",
           headers: {

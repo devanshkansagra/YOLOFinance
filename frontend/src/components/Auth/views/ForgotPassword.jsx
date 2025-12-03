@@ -14,7 +14,7 @@ function ResetPasswordDialog({ open, onClose, email }) {
   const [newPassword, setNewPassword] = React.useState("");
 
   async function handleReset() {
-    const res = await fetch("http://localhost:4000/api/auth/reset-password", {
+    const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/auth/reset-password", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -98,7 +98,7 @@ function ForgotPassword({ open, handleClose }) {
   }
 
   async function handleOTP() {
-    const res = await fetch("http://localhost:4000/api/auth/otp", {
+    const res = await fetch(+"/api/auth/otp", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -119,7 +119,7 @@ function ForgotPassword({ open, handleClose }) {
     const data = otp.join("");
     let resp;
     try {
-      const res = await fetch("http://localhost:4000/api/auth/verify-otp", {
+      const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/auth/verify-otp", {
         method: "POST",
         credentials: "include",
         headers: {

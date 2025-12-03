@@ -109,11 +109,11 @@ const mainListItems = [
         icon: "fa-solid fa-landmark",
         path: "/GovBonds",
     },
-    {
-        text: "SWP",
-        icon: "fa-solid fa-money-bill-transfer",
-        path: "/SWPDashboard",
-    },
+    // {
+    //     text: "SWP",
+    //     icon: "fa-solid fa-money-bill-transfer",
+    //     path: "/SWPDashboard",
+    // },
     {
         text: "Reports",
         icon: "fa-solid fa-file-lines",

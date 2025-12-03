@@ -97,7 +97,7 @@ export default function Login(props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/users/login",
+        import.meta.env.VITE_SERVER_ORIGIN+"/api/users/login",
         body,
         { withCredentials: true } // important to receive cookies
       );
@@ -245,7 +245,7 @@ export default function Login(props) {
               fullWidth
               variant="outlined"
               onClick={() => {
-                window.location.href = `http://localhost:4000/api/users/auth/google`;
+                window.location.href = `${import.meta.env.VITE_SERVER_ORIGIN}/api/users/auth/google`;
               }}
               startIcon={<GoogleIcon />}
             >

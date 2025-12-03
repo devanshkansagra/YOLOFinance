@@ -28,7 +28,7 @@ export default function GovBonds(props) {
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:4000/fetchGovBonds", {
+      const res = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+"/fetchGovBonds", {
         withCredentials: true,
       })
       setData(res.data)

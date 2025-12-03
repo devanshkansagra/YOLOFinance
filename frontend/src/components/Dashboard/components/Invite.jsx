@@ -10,7 +10,7 @@ function Invite() {
 
   async function handleSendInvite() {
     try {
-      const response = await fetch("http://localhost:4000/api/invite/send", {
+      const response = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/invite/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -127,7 +127,7 @@ export default function SignUp(props) {
     };
 
     const response = await axios.post(
-      "http://localhost:4000/api/users/signup",
+      import.meta.env.VITE_SERVER_ORIGIN+"/api/users/signup",
       body,
       {withCredentials: true}
     );
@@ -234,7 +234,7 @@ export default function SignUp(props) {
               fullWidth
               variant="outlined"
               onClick={() => {
-                window.location.href = `http://localhost:4000/api/users/auth/google`;
+                window.location.href = `${import.meta.env.VITE_SERVER_ORIGIN}/api/users/auth/google`;
               }}
               startIcon={<GoogleIcon />}
             >

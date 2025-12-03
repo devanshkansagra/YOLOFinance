@@ -30,7 +30,7 @@ export default function MutualFunds(props) {
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:4000/fetch-mf-data", {
+      const res = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+"/fetch-mf-data", {
         withCredentials: true,
       })
       setData(res.data)

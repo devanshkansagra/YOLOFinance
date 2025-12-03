@@ -81,11 +81,11 @@ export default function MutualFundDashboardPurchased() {
       try {
         setLoading(true);
         const res = await axios.get(
-          "http://localhost:4000/api/investments/mf-get",
+          import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-get",
           { withCredentials: true }
         );
 
-        const data = await axios.get("http://localhost:4000/fetch-mf-data", {
+        const data = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+"/fetch-mf-data", {
           withCredentials: true,
         });
 
@@ -147,7 +147,7 @@ export default function MutualFundDashboardPurchased() {
       try {
         setLoading(true);
         const res = await axios.post(
-          "http://localhost:4000/api/investments/mf-cancel",
+          import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-cancel",
           {
             schemeCode: selectedRow.schemeCode,
             schemeName: selectedRow.schemeName,
@@ -205,7 +205,7 @@ export default function MutualFundDashboardPurchased() {
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://localhost:4000/api/investments/mf-update",
+        import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-update",
         editForm,
         { withCredentials: true }
       );

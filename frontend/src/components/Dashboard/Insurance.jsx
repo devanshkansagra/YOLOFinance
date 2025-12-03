@@ -31,7 +31,7 @@ export default function Insurance(props) {
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:4000/fetchInsurance", {
+      const res = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+"/fetchInsurance", {
         withCredentials: true,
       })
       setData(res.data)
