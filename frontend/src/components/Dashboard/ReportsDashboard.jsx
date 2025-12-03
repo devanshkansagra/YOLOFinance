@@ -81,14 +81,13 @@ export default function ReportsDashboard(props) {
                         <br /><br />
                         <Box
                             sx={{
-                                display: "grid",
-                                gridTemplateColumns: {
-                                    xs: "1fr",
-                                    sm: "1fr 1fr",
-                                    md: "1fr 1fr 1fr",
-                                },
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "center",
                                 gap: 3,
-                                justifyItems: "center",
+                                width: "100%",
+                                mt: 2,
                             }}
                         >
                             {[
@@ -96,11 +95,6 @@ export default function ReportsDashboard(props) {
                                     key: "sip",
                                     label: "📈 SIP Report",
                                     color: "primary",
-                                },
-                                {
-                                    key: "swp",
-                                    label: "💸 SWP Report",
-                                    color: "info",
                                 },
                                 {
                                     key: "insurance",

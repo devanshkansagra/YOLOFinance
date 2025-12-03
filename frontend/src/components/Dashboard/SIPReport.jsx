@@ -15,6 +15,18 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import axios from "axios";
+import "../../../public/PTSans-normal.js";
+import "../../../public/Lato-Regular-normal.js";
+import "../../../public/PTSans-Bold-normal.js";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+
+const token = Cookies.get("id_token");
+let userName = "";
+if (token) {
+  const decoded = jwtDecode(token);
+  userName = decoded.name || "";
+}
 
 export default function SIPReport() {
   const [rows, setRows] = useState([]);
@@ -119,14 +131,16 @@ export default function SIPReport() {
         }
 
     // (ii) Write SIP Report below logo
-    doc.setFontSize(36);
-    doc.setTextColor(17, 80, 171); // #1150AB
-    doc.text("SIP Report", pageWidth / 2, y, { align: "center" });
-    y += 40;
-
-    // (iii) Place table below
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
+      doc.setFont("PTSans-Bold");
+      doc.setFontSize(36);
+      doc.setTextColor(17, 80, 171);
+      doc.text("SIP Report", pageWidth / 2, y, { align: "center" });
+      y += 40;
+      doc.setFont("PTSans-Regular");
+      doc.setFontSize(14);
+      doc.text(`Name : ${userName}`, pageWidth / 2, y, { align: "center" });
+      doc.setTextColor(0, 0, 0);
+      y += 30;
     const body = rows.map((r) => [
       r.schemeName,
       r.schemeCode,
