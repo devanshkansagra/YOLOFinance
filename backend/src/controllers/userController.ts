@@ -5,6 +5,7 @@ import { getAuthorizationURL } from "../handlers/getAuthorizationURL";
 import { generateAuthTokens } from "../handlers/generateAuthTokens";
 
 import { AuthRequest } from "../definitions/AuthRequest";
+import { cookieOptions } from "../utils/cookieOptions";
 
 export async function login(req: AuthRequest, res: Response): Promise<void> {
   const { email, password } = req.body;
@@ -24,20 +25,8 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
     const { id_token, refreshToken, accessToken } =
       await generateAuthTokens(user);
 
-    res.cookie("id_token", id_token, {
-      httpOnly: false,
-      secure: true, // set true in prod with HTTPS
-      path: "/",
-      maxAge: 60 * 60 * 1000,
-      sameSite: "none"
-    });
-    res.cookie("access_token", accessToken, {
-      httpOnly: false,
-      secure: true,
-      path: "/",
-      maxAge: 60 * 60 * 1000,
-      sameSite: "none"
-    });
+    res.cookie("id_token", id_token, );
+    res.cookie("access_token", accessToken, cookieOptions as object);
 
     res.status(200).json({
       message: "Login successful",
@@ -61,20 +50,8 @@ export async function signup(req: Request, res: Response) {
       const { id_token, accessToken } = await generateAuthTokens(user);
       if (response) {
         res
-          .cookie("id_token", id_token, {
-            httpOnly: false, // prevents JS access
-            sameSite: "none",            
-            maxAge: 3599 * 1000,
-            secure: true,
-            path: "/",
-          })
-          .cookie("access_token", accessToken, {
-            httpOnly: false,
-            maxAge: 3599 * 1000,
-            secure: true,
-            path: "/",
-            sameSite: "none"
-          });
+          .cookie("id_token", id_token, cookieOptions as object)
+          .cookie("access_token", accessToken, cookieOptions as object);
         res.status(201).send({ message: "New User Created" });
       }
     }
@@ -108,13 +85,7 @@ export async function googleOAuthCallback(req: Request, res: Response) {
     if (doesExists) {
       const { id_token, accessToken } = await generateAuthTokens(doesExists);
       res
-        .cookie("id_token", id_token, {
-          httpOnly: false,
-          maxAge: 3599 * 1000,
-          secure: true,
-          path: "/",
-          sameSite: "none"
-        })
+        .cookie("id_token", id_token, cookieOptions as object)
         .cookie("access_token", accessToken, {
           httpOnly: false,
           maxAge: 3599 * 1000,
@@ -136,13 +107,7 @@ export async function googleOAuthCallback(req: Request, res: Response) {
       const response1 = await user.save();
       if (response1) {
         res
-          .cookie("id_token", id_token, {
-            httpOnly: false,
-            maxAge: 3599 * 1000,
-            secure: true,
-            path: "/",
-            sameSite: "none"
-          })
+          .cookie("id_token", id_token, cookieOptions as object)
           .cookie("access_token", accessToken, {
             httpOnly: false,
             maxAge: 3599 * 1000,
@@ -195,18 +160,8 @@ async function getGoogleOauthAccessToken(code: string) {
 export async function userLogout(req: Request, res: Response) {
   try {
     res
-      .clearCookie("id_token", {
-        httpOnly: false, // must match your original cookie
-        secure: true, // match same as when you set it
-        path: "/", // match same path
-        sameSite: "lax", // if you used sameSite when setting
-      })
-      .clearCookie("access_token", {
-        httpOnly: false, // must match your original cookie
-        secure: true, // match same as when you set it
-        path: "/", // match same path
-        sameSite: "lax", // if you used sameSite when setting
-      });
+      .clearCookie("id_token", cookieOptions as object)
+      .clearCookie("access_token", cookieOptions as object);
     res.status(200).json({ message: "User Logout" });
   } catch (error) {
     console.error(error);
