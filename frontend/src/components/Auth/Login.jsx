@@ -103,7 +103,9 @@ export default function Login(props) {
       );
 
       if (response.status === 200) {
-        navigate("/Dashboard");
+        setTimeout(() => {
+          navigate("/Dashboard");
+        }, 100)
       }
     } catch (err) {
       console.error(err);
