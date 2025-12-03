@@ -3,8 +3,19 @@ import { Button, Box, Typography, Paper, Table, TableBody, TableCell, TableConta
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import axios from "axios";
+import "../../../public/PTSans-normal.js";
+import "../../../public/Lato-Regular-normal.js";
+import "../../../public/PTSans-Bold-normal.js";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const LOGO_URL = "/YOLO_Logo.png";
+const token = Cookies.get("id_token");
+let userName = "";
+if (token) {
+  const decoded = jwtDecode(token);
+  userName = decoded.name || "";
+}
 
 export default function InsuranceReport() {
   const [rows, setRows] = useState([]);
@@ -83,11 +94,14 @@ export default function InsuranceReport() {
         console.error("PDF logo error:", err);
         y += 180;
       }
+      doc.setFont("PTSans-Bold");
       doc.setFontSize(36);
       doc.setTextColor(17, 80, 171);
       doc.text("Insurance Report", pageWidth / 2, y, { align: "center" });
       y += 40;
+      doc.setFont("PTSans-Regular");
       doc.setFontSize(14);
+      doc.text(`Name : ${userName}`, pageWidth / 2, y, { align: "center" });
       doc.setTextColor(0, 0, 0);
       y += 30;
     };
@@ -105,8 +119,8 @@ export default function InsuranceReport() {
           formatCoverage(row.coverage),
           row.claimRatio || "-"
         ]),
-        styles: { fontSize: 10, halign: 'center', valign: 'middle' },
-        headStyles: { fillColor: [25, 118, 210], halign: 'center', valign: 'middle' },
+        styles: { font: "PTSans-Regular", fontSize: 10, halign: 'center', valign: 'middle' },
+        headStyles: {fillColor: [25, 118, 210], halign: 'center', valign: 'middle' },
         margin: { left: 30, right: 30 },
         theme: "grid",
       });
