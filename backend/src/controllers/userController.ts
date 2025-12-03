@@ -9,7 +9,6 @@ import { config } from "dotenv";
 config();
 
 export async function login(req: AuthRequest, res: Response): Promise<void> {
-  const isProduction = process.env.NODE_ENV === "production";
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -29,13 +28,13 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 
     res.cookie("id_token", id_token, {
       httpOnly: false,
-      secure: isProduction, // set true in prod with HTTPS
+      secure: true, // set true in prod with HTTPS
       path: "/",
       maxAge: 60 * 60 * 1000,
     });
     res.cookie("access_token", accessToken, {
       httpOnly: false,
-      secure: isProduction,
+      secure: true,
       path: "/",
       maxAge: 60 * 60 * 1000,
     });
@@ -51,7 +50,6 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
 }
 
 export async function signup(req: Request, res: Response) {
-  const isProduction = process.env.NODE_ENV === "production";
   const { name, email, username, password } = req.body;
   try {
     const doesExists = await User.findOne({ email });
@@ -66,13 +64,13 @@ export async function signup(req: Request, res: Response) {
           .cookie("id_token", id_token, {
             httpOnly: false, // prevents JS access
             maxAge: 3599 * 1000,
-            secure: isProduction,
+            secure: true,
             path: "/",
           })
           .cookie("access_token", accessToken, {
             httpOnly: false,
             maxAge: 3599 * 1000,
-            secure: isProduction,
+            secure: true,
             path: "/",
           });
         res.status(201).send({ message: "New User Created" });
@@ -89,7 +87,6 @@ export async function googleOAuth(req: Request, res: Response) {
 }
 
 export async function googleOAuthCallback(req: Request, res: Response) {
-  const isProduction = process.env.NODE_ENV === "production";
   const { code } = req.query;
   const response = await getGoogleOauthAccessToken(code as string);
 
@@ -112,13 +109,13 @@ export async function googleOAuthCallback(req: Request, res: Response) {
         .cookie("id_token", id_token, {
           httpOnly: false,
           maxAge: 3599 * 1000,
-          secure: isProduction,
+          secure: true,
           path: "/",
         })
         .cookie("access_token", accessToken, {
           httpOnly: false,
           maxAge: 3599 * 1000,
-          secure: isProduction,
+          secure: true,
           path: "/",
         });
       return res.redirect(`${process.env.ORIGIN}/Dashboard`);
@@ -138,13 +135,13 @@ export async function googleOAuthCallback(req: Request, res: Response) {
           .cookie("id_token", id_token, {
             httpOnly: false,
             maxAge: 3599 * 1000,
-            secure: isProduction,
+            secure: true,
             path: "/",
           })
           .cookie("access_token", accessToken, {
             httpOnly: false,
             maxAge: 3599 * 1000,
-            secure: isProduction,
+            secure: true,
             path: "/",
           });
         return res.redirect(`${process.env.ORIGIN}/Dashboard`);
@@ -190,17 +187,16 @@ async function getGoogleOauthAccessToken(code: string) {
 }
 
 export async function userLogout(req: Request, res: Response) {
-  const isProduction = process.env.NODE_ENV === "production";
   try {
     res
       .clearCookie("id_token", {
         httpOnly: false, // must match your original cookie
-        secure: isProduction, // match same as when you set it
+        secure: true, // match same as when you set it
         path: "/", // match same path
       })
       .clearCookie("access_token", {
         httpOnly: false, // must match your original cookie
-        secure: isProduction, // match same as when you set it
+        secure: true, // match same as when you set it
         path: "/", // match same path
       });
     res.status(200).json({ message: "User Logout" });
@@ -219,7 +215,12 @@ export async function fetchUsers(req: AuthRequest, res: Response) {
     const users = await Promise.all(
       connections.map(async (connectionId) => {
         const u = await User.findById(connectionId).select("name email");
-        return { id: u?._id, name: u?.name, email: u?.email, avatar: u?.avatar };
+        return {
+          id: u?._id,
+          name: u?.name,
+          email: u?.email,
+          avatar: u?.avatar,
+        };
       })
     );
 
