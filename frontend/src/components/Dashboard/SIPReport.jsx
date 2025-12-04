@@ -32,7 +32,7 @@ export default function SIPReport() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastError, setLastError] = useState(null);
-  const accessToken = localStorage.get("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     let mounted = true;
