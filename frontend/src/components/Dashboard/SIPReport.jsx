@@ -21,7 +21,7 @@ import "../../../public/PTSans-Bold-normal.js";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
-const token = Cookies.get("id_token");
+const token = localStorage.getItem("id_token");
 let userName = "";
 if (token) {
   const decoded = jwtDecode(token);

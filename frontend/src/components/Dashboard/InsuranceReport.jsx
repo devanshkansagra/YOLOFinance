@@ -22,7 +22,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 const LOGO_URL = "/YOLO_Logo.png";
-const token = Cookies.get("id_token");
+const token = localStorage.getItem("id_token");
 let userName = "";
 if (token) {
   const decoded = jwtDecode(token);
