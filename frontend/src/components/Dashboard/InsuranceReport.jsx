@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress } from "@mui/material";
+import {
+  Button,
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+} from "@mui/material";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import axios from "axios";
@@ -21,15 +33,27 @@ export default function InsuranceReport() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastError, setLastError] = useState(null);
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:4000/api/insurance/fetchInsurance", { withCredentials: true });
+        const res = await axios.get(
+          import.meta.env.VITE_SERVER_ORIGIN + "/api/insurance/fetchInsurance",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+          { withCredentials: true }
+        );
         if (!mounted) return;
-        const insurances = Array.isArray(res.data.insurances) ? res.data.insurances : [];
+        const insurances = Array.isArray(res.data.insurances)
+          ? res.data.insurances
+          : [];
         setRows(insurances);
       } catch (err) {
         console.error("InsuranceReport: fetch error", err);
@@ -40,7 +64,9 @@ export default function InsuranceReport() {
       }
     };
     fetchData();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   function formatPremium(premium) {
@@ -66,7 +92,8 @@ export default function InsuranceReport() {
   }
 
   const handleDownloadPDF = () => {
-    if (!rows || rows.length === 0) return alert("No insurance data to export.");
+    if (!rows || rows.length === 0)
+      return alert("No insurance data to export.");
     const doc = new jsPDF({ unit: "pt" });
     const pageWidth = doc.internal.pageSize.getWidth();
     let y = 40;
@@ -88,7 +115,14 @@ export default function InsuranceReport() {
         const imgData = canvas.toDataURL("image/png");
         const imgWidth = 300;
         const imgHeight = (img.height / img.width) * imgWidth || 95;
-        doc.addImage(imgData, "PNG", (pageWidth - imgWidth) / 2, y, imgWidth, imgHeight);
+        doc.addImage(
+          imgData,
+          "PNG",
+          (pageWidth - imgWidth) / 2,
+          y,
+          imgWidth,
+          imgHeight
+        );
         y += imgHeight + 60;
       } catch (err) {
         console.error("PDF logo error:", err);
@@ -109,18 +143,37 @@ export default function InsuranceReport() {
     addLogoAndHeader().then(() => {
       autoTable(doc, {
         startY: y + 10,
-        head: [["Policy ID", "Plan Name", "Plan Type", "Insurer", "Premium", "Coverage", "Claim Ratio"]],
-        body: rows.map(row => [
+        head: [
+          [
+            "Policy ID",
+            "Plan Name",
+            "Plan Type",
+            "Insurer",
+            "Premium",
+            "Coverage",
+            "Claim Ratio",
+          ],
+        ],
+        body: rows.map((row) => [
           row._id || row.policyId || "-",
           row.planName || "-",
           row.planType || "-",
           row.insurer || "-",
           formatPremium(row.premium),
           formatCoverage(row.coverage),
-          row.claimRatio || "-"
+          row.claimRatio || "-",
         ]),
-        styles: { font: "PTSans-Regular", fontSize: 10, halign: 'center', valign: 'middle' },
-        headStyles: {fillColor: [25, 118, 210], halign: 'center', valign: 'middle' },
+        styles: {
+          font: "PTSans-Regular",
+          fontSize: 10,
+          halign: "center",
+          valign: "middle",
+        },
+        headStyles: {
+          fillColor: [25, 118, 210],
+          halign: "center",
+          valign: "middle",
+        },
         margin: { left: 30, right: 30 },
         theme: "grid",
       });
@@ -138,12 +191,12 @@ export default function InsuranceReport() {
 
   return (
     <Box sx={{ p: 4 }}>
-        <Box>
-          <Typography variant="h4">Insurance Report</Typography>
-                  <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      <Box>
+        <Typography variant="h4">Insurance Report</Typography>
+        <Typography variant="subtitle1" sx={{ mb: 2 }}>
           Number of Insurances bought: <b>{rows.length}</b>
         </Typography>
-        </Box>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -160,12 +213,18 @@ export default function InsuranceReport() {
           <TableBody>
             {rows.map((row, idx) => (
               <TableRow key={row._id || row.policyId || idx}>
-                <TableCell align="center">{row._id || row.policyId || "-"}</TableCell>
+                <TableCell align="center">
+                  {row._id || row.policyId || "-"}
+                </TableCell>
                 <TableCell align="center">{row.planName || "-"}</TableCell>
                 <TableCell align="center">{row.planType || "-"}</TableCell>
                 <TableCell align="center">{row.insurer || "-"}</TableCell>
-                <TableCell align="center">{formatPremium(row.premium)}</TableCell>
-                <TableCell align="center">{formatCoverage(row.coverage)}</TableCell>
+                <TableCell align="center">
+                  {formatPremium(row.premium)}
+                </TableCell>
+                <TableCell align="center">
+                  {formatCoverage(row.coverage)}
+                </TableCell>
                 <TableCell align="center">{row.claimRatio || "-"}</TableCell>
               </TableRow>
             ))}
@@ -173,12 +232,20 @@ export default function InsuranceReport() {
         </Table>
       </TableContainer>
       <br />
-      <Button variant="contained" color="success" onClick={handleDownloadPDF} sx={{ mb: 3 }}>
+      <Button
+        variant="contained"
+        color="success"
+        onClick={handleDownloadPDF}
+        sx={{ mb: 3 }}
+      >
         Download PDF
       </Button>
       {lastError && (
         <Typography variant="body2" color="error" sx={{ mt: 2 }}>
-          Error: {typeof lastError === "string" ? lastError : JSON.stringify(lastError)}
+          Error:{" "}
+          {typeof lastError === "string"
+            ? lastError
+            : JSON.stringify(lastError)}
         </Typography>
       )}
     </Box>

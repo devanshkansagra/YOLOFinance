@@ -43,7 +43,7 @@ export default function SIPReport() {
         // match MutualFundsDashboardPurchased endpoints
         const [mfRes, fetchRes] = await Promise.all([
           axios.get(
-            "http://localhost:4000/api/investments/mf-get",
+            import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-get",
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -55,7 +55,7 @@ export default function SIPReport() {
             }
           ),
           axios.get(
-            "http://localhost:4000/fetch-mf-data",
+            import.meta.env.VITE_SERVER_ORIGIN+"/fetch-mf-data",
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
