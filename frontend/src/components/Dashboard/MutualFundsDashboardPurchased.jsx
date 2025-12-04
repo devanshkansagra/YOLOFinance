@@ -63,6 +63,7 @@ export default function MutualFundDashboardPurchased() {
   const [refresh, setRefresh] = useState(false);
 
   const [updateDialog, setUpdateDialog] = useState(false);
+  const accessToken = localStorage.getItem("accessToken");
   const [editForm, setEditForm] = useState({
     schemeCode: "",
     schemeName: "",
@@ -81,13 +82,22 @@ export default function MutualFundDashboardPurchased() {
       try {
         setLoading(true);
         const res = await axios.get(
-          import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-get",
+          import.meta.env.VITE_SERVER_ORIGIN + "/api/investments/mf-get",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          },
           { withCredentials: true }
         );
 
-        const data = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+"/fetch-mf-data", {
-          withCredentials: true,
-        });
+        const data = await axios.get(
+          import.meta.env.VITE_SERVER_ORIGIN + "/fetch-mf-data",
+          {
+            withCredentials: true,
+          }
+        );
 
         const records = Array.isArray(data.data) ? data.data : [];
         const arr = Array.isArray(res.data.investments)
@@ -147,10 +157,16 @@ export default function MutualFundDashboardPurchased() {
       try {
         setLoading(true);
         const res = await axios.post(
-          import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-cancel",
+          import.meta.env.VITE_SERVER_ORIGIN + "/api/investments/mf-cancel",
           {
             schemeCode: selectedRow.schemeCode,
             schemeName: selectedRow.schemeName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
           },
           { withCredentials: true }
         );
@@ -205,8 +221,14 @@ export default function MutualFundDashboardPurchased() {
     try {
       setLoading(true);
       const res = await axios.post(
-        import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-update",
+        import.meta.env.VITE_SERVER_ORIGIN + "/api/investments/mf-update",
         editForm,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        },
         { withCredentials: true }
       );
 

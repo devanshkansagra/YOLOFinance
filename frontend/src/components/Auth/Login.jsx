@@ -97,15 +97,16 @@ export default function Login(props) {
 
     try {
       const response = await axios.post(
-        import.meta.env.VITE_SERVER_ORIGIN+"/api/users/login",
+        import.meta.env.VITE_SERVER_ORIGIN + "/api/users/login",
         body,
         { withCredentials: true } // important to receive cookies
       );
 
       if (response.status === 200) {
-        setTimeout(() => {
-          navigate("/Dashboard");
-        }, 100)
+        const { accessToken, id_token } = response.data.data
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("id_token", id_token);
+        navigate("/Dashboard");
       }
     } catch (err) {
       console.error(err);
@@ -247,7 +248,9 @@ export default function Login(props) {
               fullWidth
               variant="outlined"
               onClick={() => {
-                window.location.href = `${import.meta.env.VITE_SERVER_ORIGIN}/api/users/auth/google`;
+                window.location.href = `${
+                  import.meta.env.VITE_SERVER_ORIGIN
+                }/api/users/auth/google`;
               }}
               startIcon={<GoogleIcon />}
             >

@@ -132,6 +132,9 @@ export default function SignUp(props) {
       {withCredentials: true}
     );
     if (response) {
+      const { accessToken, id_token } = response.data.data
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("id_token", id_token);
       navigate('/Dashboard')
     }
   };

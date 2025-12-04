@@ -26,24 +26,24 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
     const { id_token, refreshToken, accessToken } =
       await generateAuthTokens(user);
 
-    res.cookie("id_token", id_token, {
-      httpOnly: false,
-      secure: true, // set true in prod with HTTPS
-      path: "/",
-      maxAge: 60 * 60 * 1000,
-      sameSite: "none"
-    });
-    res.cookie("access_token", accessToken, {
-      httpOnly: false,
-      secure: true,
-      path: "/",
-      maxAge: 60 * 60 * 1000,
-      sameSite: "none"
-    });
+    // res.cookie("id_token", id_token, {
+    //   httpOnly: false,
+    //   secure: false, // set true in prod with HTTPS
+    //   path: "/",
+    //   maxAge: 60 * 60 * 1000,
+      
+    // });
+    // res.cookie("access_token", accessToken, {
+    //   httpOnly: false,
+    //   secure: false,
+    //   path: "/",
+    //   maxAge: 60 * 60 * 1000,
+      
+    // });
 
     res.status(200).json({
       message: "Login successful",
-      user: { id: user._id, email: user.email },
+      data: { id: user._id, email: user.email, accessToken, id_token },
     });
   } catch (error) {
     console.error(error);
@@ -62,22 +62,22 @@ export async function signup(req: Request, res: Response) {
       const response = await user.save();
       const { id_token, accessToken } = await generateAuthTokens(user);
       if (response) {
-        res
-          .cookie("id_token", id_token, {
-            httpOnly: false, // prevents JS access
-            maxAge: 3599 * 1000,
-            secure: true,
-            path: "/",
-            sameSite: "none"
-          })
-          .cookie("access_token", accessToken, {
-            httpOnly: false,
-            maxAge: 3599 * 1000,
-            secure: true,
-            path: "/",
-            sameSite: "none"
-          });
-        res.status(201).send({ message: "New User Created" });
+        // res
+        //   .cookie("id_token", id_token, {
+        //     httpOnly: false, // prevents JS access
+        //     maxAge: 3599 * 1000,
+        //     secure: false,
+        //     path: "/",
+            
+        //   })
+        //   .cookie("access_token", accessToken, {
+        //     httpOnly: false,
+        //     maxAge: 3599 * 1000,
+        //     secure: false,
+        //     path: "/",
+            
+        //   });
+        res.status(201).send({ message: "New User Created", data: {accessToken, id_token} });
       }
     }
   } catch (error) {
@@ -113,16 +113,16 @@ export async function googleOAuthCallback(req: Request, res: Response) {
         .cookie("id_token", id_token, {
           httpOnly: false,
           maxAge: 3599 * 1000,
-          secure: true,
+          secure: false,
           path: "/",
-          sameSite: "none"
+          
         })
         .cookie("access_token", accessToken, {
           httpOnly: false,
           maxAge: 3599 * 1000,
-          secure: true,
+          secure: false,
           path: "/",
-          sameSite: "none"
+          
         });
       return res.redirect(`${process.env.ORIGIN}/Dashboard`);
     } else {
@@ -141,16 +141,16 @@ export async function googleOAuthCallback(req: Request, res: Response) {
           .cookie("id_token", id_token, {
             httpOnly: false,
             maxAge: 3599 * 1000,
-            secure: true,
+            secure: false,
             path: "/",
-            sameSite: "none"
+            
           })
           .cookie("access_token", accessToken, {
             httpOnly: false,
             maxAge: 3599 * 1000,
-            secure: true,
+            secure: false,
             path: "/",
-            sameSite: "none"
+            
           });
         return res.redirect(`${process.env.ORIGIN}/Dashboard`);
       }
@@ -199,15 +199,15 @@ export async function userLogout(req: Request, res: Response) {
     res
       .clearCookie("id_token", {
         httpOnly: false, // must match your original cookie
-        secure: true, // match same as when you set it
+        secure: false, // match same as when you set it
         path: "/", // match same path
-        sameSite: "none"
+        
       })
       .clearCookie("access_token", {
         httpOnly: false, // must match your original cookie
-        secure: true, // match same as when you set it
+        secure: false, // match same as when you set it
         path: "/", // match same path
-        sameSite: "none"
+        
       });
     res.status(200).json({ message: "User Logout" });
   } catch (error) {

@@ -115,9 +115,11 @@ export function PaymentPage() {
       nav: nav,
       units: units,
     };
+    const accessToken = localStorage.getItem('accessToken');
     const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/investments/mf-buy", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       credentials: "include",
