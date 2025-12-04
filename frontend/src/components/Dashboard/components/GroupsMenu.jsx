@@ -28,6 +28,7 @@ const Drawer = styled(MuiDrawer)({
 });
 function GroupsMenu({ userId, setUserId }) {
   const [groups, setGroups] = useState([]);
+  const accessToken = localStorage.getItem('accessToken');
   useEffect(() => {
     async function fetchUsers() {
       const res = await fetch(
@@ -36,6 +37,7 @@ function GroupsMenu({ userId, setUserId }) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
           },
           credentials: "include",
         }

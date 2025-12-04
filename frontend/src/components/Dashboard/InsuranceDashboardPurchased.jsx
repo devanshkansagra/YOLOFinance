@@ -63,13 +63,19 @@ export default function InsuranceDashboardPurchased() {
   });
 
   const cart = useCartStore((state) => state.cart);
-
+  const accessToken = localStorage.getItem('accessToken');
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
         setLoading(true);
         const res = await axios.get(
           import.meta.env.VITE_SERVER_ORIGIN+"/api/insurance/fetchInsurance",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`
+            }
+          },
           { withCredentials: true }
         );
         const arr = Array.isArray(res.data.insurances) ? res.data.insurances : [];
@@ -108,12 +114,19 @@ export default function InsuranceDashboardPurchased() {
   };
 
   const handleConfirmCancel = async () => {
+    const accessToken = localStorage.getItem('accessToken');
     if (cancelInput.toLowerCase() === "cancel" && selectedRow) {
       try {
         setLoading(true);
         const res = await axios.post(
           import.meta.env.VITE_SERVER_ORIGIN+"/api/insurance/cancel",
           { policyId: selectedRow.policyId },
+          {
+            headers: {
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type" : "application/json"
+            }
+          },
           { withCredentials: true }
         );
 

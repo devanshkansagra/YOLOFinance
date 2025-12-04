@@ -31,10 +31,12 @@ export function InsurancePaymentPage() {
       coverage,
       claimRatio,
     };
+    const accessToken = localStorage.getItem('accessToken');
     const res = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/insurance/buy-policy", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       credentials: "include",
       body: JSON.stringify(data),

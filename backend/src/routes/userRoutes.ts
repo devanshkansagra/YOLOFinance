@@ -14,7 +14,7 @@ userRoutes.post("/login", login as any);
 userRoutes.post("/signup", signup);
 userRoutes.get("/auth/google", googleOAuth);
 userRoutes.get("/google-oauth-callback", googleOAuthCallback);
-userRoutes.get('/logout', userLogout);
+userRoutes.get('/logout', verifyJWT, userLogout);
 userRoutes.get('/connections/get', verifyJWT, fetchUsers as any);
 
 export default userRoutes;

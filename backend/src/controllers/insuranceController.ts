@@ -65,7 +65,7 @@ export async function fetchInsurance(req: AuthRequest, res: Response) {
     // console.log(user);
     const insurances = await Insurance.aggregate([
       {
-        $match: { userId: user, isCancelled: false }, // ✅ skip cancelled SIPs
+        $match: { userId: user, isCancelled: false },
       },
       {
         $group: {
@@ -125,7 +125,7 @@ export async function cancelPolicy(req: AuthRequest, res: Response) {
 export async function getInsurance(req: AuthRequest, res: Response) {
   const { id } = req.params;
   try {
-    const userInsurance = await Insurance.find({userId: id});
+    const userInsurance = await Insurance.find({userId: id, isCancelled: false});
     if(!userInsurance) {
       return res.status(404).send({message: "No insurances found"});
     }

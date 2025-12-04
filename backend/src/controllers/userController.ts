@@ -109,22 +109,22 @@ export async function googleOAuthCallback(req: Request, res: Response) {
     const doesExists = await User.findOne({ email: userInfo.email });
     if (doesExists) {
       const { id_token, accessToken } = await generateAuthTokens(doesExists);
-      res
-        .cookie("id_token", id_token, {
-          httpOnly: false,
-          maxAge: 3599 * 1000,
-          secure: false,
-          path: "/",
+      // res
+      //   .cookie("id_token", id_token, {
+      //     httpOnly: false,
+      //     maxAge: 3599 * 1000,
+      //     secure: false,
+      //     path: "/",
           
-        })
-        .cookie("access_token", accessToken, {
-          httpOnly: false,
-          maxAge: 3599 * 1000,
-          secure: false,
-          path: "/",
+      //   })
+      //   .cookie("access_token", accessToken, {
+      //     httpOnly: false,
+      //     maxAge: 3599 * 1000,
+      //     secure: false,
+      //     path: "/",
           
-        });
-      return res.redirect(`${process.env.ORIGIN}/Dashboard`);
+      //   });
+      return res.redirect(`${process.env.ORIGIN}/oauth-success?access=${accessToken}&id=${id_token}`);
     } else {
       const user = new User({
         name: userInfo.name,
@@ -137,22 +137,22 @@ export async function googleOAuthCallback(req: Request, res: Response) {
       const { id_token, accessToken } = await generateAuthTokens(user);
       const response1 = await user.save();
       if (response1) {
-        res
-          .cookie("id_token", id_token, {
-            httpOnly: false,
-            maxAge: 3599 * 1000,
-            secure: false,
-            path: "/",
+        // res
+        //   .cookie("id_token", id_token, {
+        //     httpOnly: false,
+        //     maxAge: 3599 * 1000,
+        //     secure: false,
+        //     path: "/",
             
-          })
-          .cookie("access_token", accessToken, {
-            httpOnly: false,
-            maxAge: 3599 * 1000,
-            secure: false,
-            path: "/",
+        //   })
+        //   .cookie("access_token", accessToken, {
+        //     httpOnly: false,
+        //     maxAge: 3599 * 1000,
+        //     secure: false,
+        //     path: "/",
             
-          });
-        return res.redirect(`${process.env.ORIGIN}/Dashboard`);
+        //   });
+        return res.redirect(`${process.env.ORIGIN}/oauth-success?access=${accessToken}&id=${id_token}`);
       }
     }
   } catch (error) {
@@ -196,19 +196,6 @@ async function getGoogleOauthAccessToken(code: string) {
 
 export async function userLogout(req: Request, res: Response) {
   try {
-    res
-      .clearCookie("id_token", {
-        httpOnly: false, // must match your original cookie
-        secure: false, // match same as when you set it
-        path: "/", // match same path
-        
-      })
-      .clearCookie("access_token", {
-        httpOnly: false, // must match your original cookie
-        secure: false, // match same as when you set it
-        path: "/", // match same path
-        
-      });
     res.status(200).json({ message: "User Logout" });
   } catch (error) {
     console.error(error);

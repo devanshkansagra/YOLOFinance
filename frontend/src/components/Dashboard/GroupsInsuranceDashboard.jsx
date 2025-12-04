@@ -38,22 +38,27 @@ function normalizeRow(raw) {
   };
 }
 
-export default function GroupsInsuranceDashboard({userId}) {
+export default function GroupsInsuranceDashboard({ userId }) {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [query, setQuery] = useState("");
 
+  const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
         setLoading(true);
         const res = await axios.get(
           `${import.meta.env.VITE_SERVER_ORIGIN}/api/insurance/get/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          },
           { withCredentials: true }
         );
-        const arr = Array.isArray(res.data.data)
-          ? res.data.data
-          : [];
+        const arr = Array.isArray(res.data.data) ? res.data.data : [];
         const policies = arr.map((raw) => normalizeRow(raw));
         setRows(policies);
       } catch (err) {

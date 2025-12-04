@@ -29,8 +29,14 @@ export default function OptionsMenu() {
   };
 
   async function handleLogout () {
-    const response = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+'/api/users/logout', {withCredentials: true});
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await axios.get(import.meta.env.VITE_SERVER_ORIGIN+'/api/users/logout', {headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer: ${accessToken}`
+    }}, {withCredentials: true});
     if(response) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('id_token')
       navigate('/');    
     }
   }

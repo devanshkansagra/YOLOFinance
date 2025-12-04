@@ -10,10 +10,12 @@ function Invite() {
 
   async function handleSendInvite() {
     try {
+      const accessToken = localStorage.getItem('accessToken');
       const response = await fetch(import.meta.env.VITE_SERVER_ORIGIN+"/api/invite/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
         },
         body: JSON.stringify({ email }),
         credentials: "include",

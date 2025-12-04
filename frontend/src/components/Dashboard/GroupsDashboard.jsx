@@ -20,7 +20,7 @@ import {
   treeViewCustomizations,
 } from "./theme/customizations";
 import axios from "axios";
-import {Grid} from "@mui/material";
+import { Grid } from "@mui/material";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -38,32 +38,55 @@ export default function GroupsDashboard({ userId }) {
     message: "",
     severity: "success",
   });
-
+  const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
     const fetchGroups = async () => {
       try {
         setLoading(true);
+
+        // 1️⃣ Fetch user's purchased investments
         const res = await axios.get(
           `${import.meta.env.VITE_SERVER_ORIGIN}/api/investments/get/${userId}`,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
         );
 
-        const data = Array.isArray(res.data.data) ? res.data.data : [];
-
-        console.log(data);
-
-        setRows(
-          (Array.isArray(res.data.data) ? res.data.data : []).map(
-            (g, index) => ({
-              id: g._id || index,
-              schemeName: g.schemeName || "Unnamed",
-              schemeCode: g.schemeCode || "-",
-              amount: g.amount || 0,
-              nav: g.nav || "-",
-              units: g.units || "-",
-            })
-          )
+        // 2️⃣ Fetch MF NAV records
+        const navRes = await axios.get(
+          `${import.meta.env.VITE_SERVER_ORIGIN}/fetch-mf-data`,
+          {
+            withCredentials: true,
+          }
         );
+
+        const purchased = Array.isArray(res.data.data) ? res.data.data : [];
+        const navRecords = Array.isArray(navRes.data) ? navRes.data : [];
+
+        // 3️⃣ Merge the logic like code 2
+        const merged = purchased.map((inv, index) => {
+          const match = navRecords.find(
+            (record) => inv.schemeCode === record["Scheme Code"]
+          );
+
+          const nav = match?.["Net Asset Value"] ?? 0;
+
+          return {
+            id: inv._id || index,
+            schemeName: inv.schemeName ?? "Unnamed",
+            schemeCode: inv.schemeCode ?? "-",
+            amount: inv.amount ?? 0,
+            nav: nav,
+            units:
+              nav && inv.amount ? (inv.amount / Number(nav)).toFixed(3) : "-",
+          };
+        });
+
+        setRows(merged);
       } catch (err) {
         console.error(err);
         setSnackbar({
@@ -190,8 +213,6 @@ export default function GroupsDashboard({ userId }) {
             Showing {filteredRows.length} of {rows.length} groups
           </Typography>
         </Stack>
-
-        
       </Box>
 
       <Snackbar

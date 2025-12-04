@@ -17,6 +17,7 @@ function InvitePage() {
   const navigate = useNavigate();
   const handleResponse = async (response) => {
     setLoading(true);
+    const accessToken = localStorage.getItem('accessToken');
     try {
       const res = await fetch(
         `${import.meta.env.VITE_SERVER_ORIGIN}/api/invite/recieve/${token}`,
@@ -24,6 +25,7 @@ function InvitePage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
           },
           body: JSON.stringify({ response }),
           credentials: "include",

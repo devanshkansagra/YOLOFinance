@@ -32,6 +32,7 @@ import GovBonds from "./components/Dashboard/GovBonds";
 import SuccessPage from "./components/Home/SuccessPage";
 import InvitePage from "./components/Common/InvitePage";
 import Groups from "./components/Dashboard/Groups";
+import OAuthSuccess from "./components/Home/OAuthSuccess";
 
 const App = () => (
   <Router>
@@ -145,6 +146,7 @@ const App = () => (
           }
         />
         <Route path="/success" element={<SuccessPage />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
         <Route
           path="/invite/:token"
           element={
