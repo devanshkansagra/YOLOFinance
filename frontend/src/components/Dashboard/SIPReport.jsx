@@ -32,6 +32,7 @@ export default function SIPReport() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastError, setLastError] = useState(null);
+  const accessToken = localStorage.get("accessToken");
 
   useEffect(() => {
     let mounted = true;
@@ -41,12 +42,30 @@ export default function SIPReport() {
         setLoading(true);
         // match MutualFundsDashboardPurchased endpoints
         const [mfRes, fetchRes] = await Promise.all([
-          axios.get("http://localhost:4000/api/investments/mf-get", {
-            withCredentials: true,
-          }),
-          axios.get("http://localhost:4000/fetch-mf-data", {
-            withCredentials: true,
-          }),
+          axios.get(
+            "http://localhost:4000/api/investments/mf-get",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+            },
+            {
+              withCredentials: true,
+            }
+          ),
+          axios.get(
+            "http://localhost:4000/fetch-mf-data",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+            },
+            {
+              withCredentials: true,
+            }
+          ),
         ]);
 
         if (!mounted) return;
@@ -57,19 +76,26 @@ export default function SIPReport() {
           ? mfRes.data
           : [];
 
-        const records = Array.isArray(fetchRes.data) ? fetchRes.data : Array.isArray(fetchRes.data.data) ? fetchRes.data.data : [];
+        const records = Array.isArray(fetchRes.data)
+          ? fetchRes.data
+          : Array.isArray(fetchRes.data.data)
+          ? fetchRes.data.data
+          : [];
 
         // build quick lookup by Scheme Code (the fetch-mf-data uses "Scheme Code" key)
         const navLookup = {};
         for (const rec of records) {
           const key = rec["Scheme Code"] ?? rec.schemeCode ?? rec.id;
-          if (key != null) navLookup[String(key)] = rec["Net Asset Value"] ?? rec.nav ?? rec.netAssetValue ?? 0;
+          if (key != null)
+            navLookup[String(key)] =
+              rec["Net Asset Value"] ?? rec.nav ?? rec.netAssetValue ?? 0;
         }
 
         const mapped = investments.map((raw) => {
           const nav = navLookup[raw._id] ?? navLookup[raw.schemeCode] ?? 0;
           const navNum = Number(nav) || 0;
-          const units = navNum > 0 ? Number((raw.amount / navNum).toFixed(3)) : 0;
+          const units =
+            navNum > 0 ? Number((raw.amount / navNum).toFixed(3)) : 0;
           return {
             id: raw.schemeCode ?? raw._id ?? raw.id,
             schemeCode: raw.schemeCode ?? raw._id ?? "-",
@@ -102,45 +128,52 @@ export default function SIPReport() {
     const pageWidth = doc.internal.pageSize.getWidth();
     let y = 40;
 
-        // (i) Add logo at top center
-        // Use public directory path for logo
-        const logoUrl = "/YOLO_Logo.png";
-        try {
-          const img = new window.Image();
-          img.crossOrigin = "anonymous";
-          img.src = logoUrl;
-          await new Promise((resolve, reject) => {
-            img.onload = () => resolve();
-            img.onerror = reject;
-          });
-          // Draw image to canvas to get data URL
-          const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-          const imgData = canvas.toDataURL("image/png");
-          const imgWidth = 300;
-          const imgHeight = (img.height / img.width) * imgWidth || 95;
-          doc.addImage(imgData, "PNG", (pageWidth - imgWidth) / 2, y, imgWidth, imgHeight);
-          y += imgHeight + 60;
-        } catch (err) {
-          // If logo fails, just continue
-          console.error("PDF logo error:", err);
-          y += 180;
-        }
+    // (i) Add logo at top center
+    // Use public directory path for logo
+    const logoUrl = "/YOLO_Logo.png";
+    try {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.src = logoUrl;
+      await new Promise((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = reject;
+      });
+      // Draw image to canvas to get data URL
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 300;
+      const imgHeight = (img.height / img.width) * imgWidth || 95;
+      doc.addImage(
+        imgData,
+        "PNG",
+        (pageWidth - imgWidth) / 2,
+        y,
+        imgWidth,
+        imgHeight
+      );
+      y += imgHeight + 60;
+    } catch (err) {
+      // If logo fails, just continue
+      console.error("PDF logo error:", err);
+      y += 180;
+    }
 
     // (ii) Write SIP Report below logo
-      doc.setFont("PTSans-Bold");
-      doc.setFontSize(36);
-      doc.setTextColor(17, 80, 171);
-      doc.text("SIP Report", pageWidth / 2, y, { align: "center" });
-      y += 40;
-      doc.setFont("PTSans-Regular");
-      doc.setFontSize(14);
-      doc.text(`Name : ${userName}`, pageWidth / 2, y, { align: "center" });
-      doc.setTextColor(0, 0, 0);
-      y += 30;
+    doc.setFont("PTSans-Bold");
+    doc.setFontSize(36);
+    doc.setTextColor(17, 80, 171);
+    doc.text("SIP Report", pageWidth / 2, y, { align: "center" });
+    y += 40;
+    doc.setFont("PTSans-Regular");
+    doc.setFontSize(14);
+    doc.text(`Name : ${userName}`, pageWidth / 2, y, { align: "center" });
+    doc.setTextColor(0, 0, 0);
+    y += 30;
     const body = rows.map((r) => [
       r.schemeName,
       r.schemeCode,
@@ -152,8 +185,13 @@ export default function SIPReport() {
       startY: y + 10,
       head: [["Scheme Name", "Scheme Code", "NAV", "Units", "Amount(Rs.)"]],
       body,
-      styles: { fontSize: 12, halign: 'center', valign: 'middle' },
-      headStyles: { fillColor: [17, 80, 171], textColor: 255, halign: 'center', valign: 'middle' },
+      styles: { fontSize: 12, halign: "center", valign: "middle" },
+      headStyles: {
+        fillColor: [17, 80, 171],
+        textColor: 255,
+        halign: "center",
+        valign: "middle",
+      },
       margin: { left: 30, right: 30 },
       theme: "grid",
     });
@@ -178,7 +216,11 @@ export default function SIPReport() {
         </Box>
 
         <Box>
-          <Button variant="contained" color="primary" onClick={handleDownloadPDF}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDownloadPDF}
+          >
             Download PDF
           </Button>
         </Box>
@@ -189,7 +231,10 @@ export default function SIPReport() {
           <Typography>No SIP purchases found.</Typography>
           {lastError && (
             <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-              Error: {typeof lastError === "string" ? lastError : JSON.stringify(lastError)}
+              Error:{" "}
+              {typeof lastError === "string"
+                ? lastError
+                : JSON.stringify(lastError)}
             </Typography>
           )}
         </Paper>
@@ -210,9 +255,13 @@ export default function SIPReport() {
                 <TableRow key={row.id ?? idx}>
                   <TableCell>{row.schemeName}</TableCell>
                   <TableCell>{row.schemeCode}</TableCell>
-                  <TableCell>{row.nav != null ? Number(row.nav).toFixed(2) : "-"}</TableCell>
+                  <TableCell>
+                    {row.nav != null ? Number(row.nav).toFixed(2) : "-"}
+                  </TableCell>
                   <TableCell align="right">{row.units}</TableCell>
-                  <TableCell align="right">{Number(row.amount || 0).toFixed(2)}</TableCell>
+                  <TableCell align="right">
+                    {Number(row.amount || 0).toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
